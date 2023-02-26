@@ -31,7 +31,7 @@ const openai = new OpenAIApi(configuration)
 const app = express()
 
 let conversationContext = ''
-
+let conversationCount = 0
 // Parse JSON in request body
 app.use(express.json())
 
@@ -63,7 +63,10 @@ app.post('/davinci', async (req, res) => {
       error: 'Missing required field "prompt" in request body',
     })
   }
-
+  if (req.body.prompt === "start") {
+    conversationContext = '';
+    conversationCount = 0;
+  }
   try {
     // Call OpenAI API
     const prompt = req.body.prompt
@@ -86,10 +89,17 @@ A: `,
       presence_penalty: 0.2,
     })
 
-    // Add the response to the conversation context
-    conversationContext += `A: ${response.data.choices[0].text}\n`
+   // Add the response to the conversation context
+   conversationContext += `A: ${response.data.choices[0].text}\n`
 
-    console.log(response.data.choices[0].text)
+   console.log(response.data.choices[0].text)
+
+   conversationCount++
+
+   if (conversationCount === 10) {
+     conversationContext = ''
+     conversationCount = 0
+   }
     // Return response from OpenAI API
     res.status(200).send({
       bot: response.data.choices[0].text,
@@ -113,6 +123,10 @@ app.post('/davinci2', async (req, res) => {
     return res.status(400).send({
       error: 'Missing required field "prompt" in request body',
     })
+  }
+  if (req.body.prompt === "start") {
+    conversationContext = '';
+    conversationCount = 0;
   }
 
   try {
@@ -141,6 +155,12 @@ A: `,
     conversationContext += `A: ${response.data.choices[0].text}\n`
 
     console.log(response.data.choices[0].text)
+    conversationCount++
+
+    if (conversationCount === 10) {
+      conversationContext = ''
+      conversationCount = 0
+    }
     // Return response from OpenAI API
     res.status(200).send({
       bot: response.data.choices[0].text,
@@ -165,6 +185,10 @@ app.post('/davinci3', async (req, res) => {
       error: 'Missing required field "prompt" in request body',
     })
   }
+  if (req.body.prompt === "start") {
+    conversationContext = '';
+    conversationCount = 0;
+  }
 
   try {
     // Call OpenAI API
@@ -178,7 +202,7 @@ app.post('/davinci3', async (req, res) => {
     const response = await openai.createCompletion({
       model: 'text-davinci-003',
       prompt: `
-      You are a very friendly therapist and will reply to me in detail and friendly manner.
+      You are not a but but a very friendly therapist and will reply to me in detail and friendly manner.
       ${conversationContext}
 you: `,
       temperature: 0.8,
@@ -189,9 +213,15 @@ you: `,
     })
 
     // Add the response to the conversation context
-    conversationContext += `A: ${response.data.choices[0].text}\n`
+    conversationContext += `you: ${response.data.choices[0].text}\n`
 
     console.log(response.data.choices[0].text)
+    conversationCount++
+
+    if (conversationCount === 10) {
+      conversationContext = ''
+      conversationCount = 0
+    }
     // Return response from OpenAI API
     res.status(200).send({
       bot: response.data.choices[0].text,
@@ -208,6 +238,7 @@ you: `,
 
 
 
+//entertainment
 
 
 app.post('/davinci4', async (req, res) => {
@@ -268,6 +299,10 @@ app.post('/davinci5', async (req, res) => {
     return res.status(400).send({
       error: 'Missing required field "prompt" in request body',
     })
+  }
+  if (req.body.prompt === "start") {
+    conversationContext = '';
+    conversationCount = 0;
   }
 
   try {
@@ -347,6 +382,9 @@ correct: `,
     conversationContext += `correct: ${response.data.choices[0].text}\n`
 
     console.log(response.data.choices[0].text)
+   
+
+    
     // Return response from OpenAI API
     res.status(200).send({
       bot: response.data.choices[0].text,
@@ -372,6 +410,11 @@ app.post('/davinci7', async (req, res) => {
       error: 'Missing required field "prompt" in request body',
     })
   }
+  if (req.body.prompt === "start") {
+    conversationContext = '';
+    conversationCount = 0;
+  }
+
 
   try {
     // Call OpenAI API
@@ -399,6 +442,12 @@ you: `,
     conversationContext += `you: ${response.data.choices[0].text}\n`
 
     console.log(response.data.choices[0].text)
+      conversationCount++
+
+    if (conversationCount === 10) {
+      conversationContext = ''
+      conversationCount = 0
+    }
     // Return response from OpenAI API
     res.status(200).send({
       bot: response.data.choices[0].text,
